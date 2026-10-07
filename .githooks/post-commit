@@ -1,0 +1,78 @@
+#!/bin/sh
+. "$(dirname "$0")/lib/ui.sh"
+
+HASH=$(git rev-parse --short HEAD)
+BRANCH=$(git branch --show-current)
+SUBJECT=$(git log -1 --format=%s)
+
+NS=$(mktemp)
+NUM=$(mktemp)
+trap 'rm -f "$NS" "$NUM"' EXIT
+
+# Estado de cada archivo (A, M, D, R) y líneas añadidas/eliminadas
+git diff-tree --root --no-commit-id -r -M --name-status HEAD > "$NS"
+git diff-tree --root --no-commit-id -r -M --numstat     HEAD > "$NUM"
+
+{
+  printf '%s COMMIT %s %s%s%s %sen%s %s%s%s\n' \
+    "$BADGE_OK" "$RESET" "$YELLOW" "$HASH" "$RESET" "$DIM" "$RESET" "$CYAN" "$BRANCH" "$RESET"
+  printf '  %s\n\n' "$SUBJECT"
+
+  paste "$NS" "$NUM" | awk -F'\t' \
+    -v g="$GREEN" -v r="$RED" -v y="$YELLOW" -v c="$CYAN" -v d="$DIM" -v z="$RESET" '
+    # 1ª pasada: leer y guardar cada archivo
+    {
+      st = substr($1, 1, 1)
+      if (st == "R") { name = $2 " -> " $3; a = $4; del = $5 }
+      else           { name = $2;            a = $3; del = $4 }
+
+      n++
+      S[n] = st; N[n] = name; A[n] = a; D[n] = del
+
+      if (length(name) > w) w = length(name)
+      if (a != "-") {
+        ta += a; td += del
+        if (a + del > mx) mx = a + del
+      }
+    }
+
+    # 2ª pasada: imprimir alineado
+    END {
+      BAR = 16
+
+      for (i = 1; i <= n; i++) {
+        # Símbolo y color según el estado
+        if      (S[i] == "A") { sym = "+"; col = g }
+        else if (S[i] == "D") { sym = "-"; col = r }
+        else if (S[i] == "R") { sym = "→"; col = c }
+        else                  { sym = "~"; col = y }
+
+        printf "  %s%s %-*s%s", col, sym, w, N[i], z
+
+        if (A[i] == "-") {
+          printf "  %sbinario%s\n", d, z
+          continue
+        }
+
+        # Siempre + y -; atenuado si es 0
+        printf "  %s%5s%s %s%5s%s    ", \
+          (A[i] > 0 ? g : d), "+" A[i], z, \
+          (D[i] > 0 ? r : d), "-" D[i], z
+
+        # Barra proporcional
+        p = mx ? int(A[i] * BAR / mx + 0.5) : 0; if (A[i] > 0 && p == 0) p = 1
+        m = mx ? int(D[i] * BAR / mx + 0.5) : 0; if (D[i] > 0 && m == 0) m = 1
+
+        bar = ""; for (k = 0; k < p; k++) bar = bar "+"
+        printf "%s%s%s", g, bar, z
+        bar = ""; for (k = 0; k < m; k++) bar = bar "-"
+        printf "%s%s%s\n", r, bar, z
+      }
+
+      # Resumen final: 6 archivos  +228  -0
+      printf "\n  %s%d %s%s  %s+%d%s  %s-%d%s\n\n", \
+        d, n, (n == 1 ? "archivo" : "archivos"), z, \
+        (ta > 0 ? g : d), ta, z, \
+        (td > 0 ? r : d), td, z
+    }'
+} >&2

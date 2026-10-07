@@ -1,0 +1,100 @@
+#!/bin/sh
+. "$(dirname "$0")/lib/ui.sh"
+
+TIME_FILE="$(git rev-parse --git-dir)/.hooks-elapsed"
+OUT_FILE=$(mktemp)
+rm -f "$TIME_FILE"
+
+trap 'rm -f "$OUT_FILE"; printf "%s" "$SHOW_CURSOR" >&2' EXIT
+trap 'exit 130' INT TERM
+
+START=$(now_ms)
+header "Comprobando el código antes del commit"
+
+# run_step "Nombre" comando...: lo ejecuta con animación y deja el tiempo en $T
+run_step() {
+  NAME=$1
+  shift
+
+  T0=$(now_ms)
+  "$@" > "$OUT_FILE" 2>&1 &
+  PID=$!
+  spin "$PID" "$NAME"
+
+  wait "$PID"
+  RC=$?
+  T=$(fmt_ms $(( $(now_ms) - T0 )))
+  return $RC
+}
+
+# fail "Nombre" "Cómo arreglarlo": muestra la salida del error y cancela el commit
+fail() {
+  fail_line "$1" "$T"
+  printf '\n' >&2
+  sed 's/^/    /' "$OUT_FILE" >&2
+  printf '\n  %sSolución:%s %s\n\n' "$YELLOW" "$RESET" "$2" >&2
+  printf '%s✖ Commit cancelado%s\n\n' "$RED$BOLD" "$RESET" >&2
+  exit 1
+}
+
+# run_check "Nombre" "Cómo arreglarlo" comando...
+run_check() {
+  NAME=$1
+  FIX=$2
+  shift 2
+
+  run_step "$NAME" "$@" || fail "$NAME" "$FIX"
+  ok_line "$NAME" "$T"
+}
+
+# Formatea con Spotless los Java en staging y los vuelve a añadir al commit.
+# Si alguno tiene además cambios sin añadir, solo se comprueba: formatearlo
+# metería en el commit cambios que no se han elegido.
+format_java() {
+  NAME="Formato (Spotless)"
+  JAVA=$(echo "$STAGED" | grep -E '\.java$')
+
+  if [ -z "$JAVA" ] || [ -n "$(git diff --name-only -- $JAVA)" ]; then
+    run_check "$NAME" "ejecuta mvn spotless:apply y vuelve a hacer git add" \
+      mvn -q spotless:check
+    return
+  fi
+
+  # Una expresión regular por archivo para limitar Spotless a los del commit
+  # («.» en lugar de «/» para que valga también con las rutas de Windows)
+  FILES=$(echo "$JAVA" | sed -e 's#/#.#g' -e 's/^/.*/' | paste -sd, -)
+
+  run_step "$NAME" mvn -q spotless:apply -DspotlessFiles="$FILES" \
+    || fail "$NAME" "corrige el error indicado arriba"
+
+  FIXED=$(git diff --name-only -- $JAVA)
+  if [ -z "$FIXED" ]; then
+    ok_line "$NAME" "$T"
+    return
+  fi
+
+  git add -- $FIXED
+  N=$(echo "$FIXED" | wc -l | tr -d ' ')
+  if [ "$N" -eq 1 ]; then
+    ok_line "$NAME" "$T · 1 archivo formateado"
+  else
+    ok_line "$NAME" "$T · $N archivos formateados"
+  fi
+}
+
+# Archivos en staging (añadidos, copiados, modificados o renombrados)
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+
+# Solo se comprueba si hay Java o configuración que afecte a las herramientas
+if echo "$STAGED" | grep -Eq '\.java$|(^|/)pom\.xml$|^config/checkstyle/'; then
+  format_java
+
+  run_check "Estilo (Checkstyle)" "corrige los errores indicados arriba" \
+    mvn -q checkstyle:check
+else
+  skip_line "Formato (Spotless)"  "sin cambios en Java"
+  skip_line "Estilo (Checkstyle)" "sin cambios en Java"
+fi
+
+# El bloque lo cierra commit-msg
+echo $(( $(now_ms) - START )) > "$TIME_FILE"

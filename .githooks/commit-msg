@@ -1,0 +1,81 @@
+#!/bin/sh
+. "$(dirname "$0")/lib/ui.sh"
+
+MIN_SPIN=0.4   # duración mínima de la animación (0 = sin animación)
+
+MSG=$(head -n1 "$1")
+TIME_FILE="$(git rev-parse --git-dir)/.hooks-elapsed"
+TYPES='feat|fix|chore|docs|style|refactor|test|perf|build|ci|revert'
+LABEL="Mensaje de commit"
+ERROR=
+NOTE=
+
+trap 'printf "%s" "$SHOW_CURSOR" >&2' EXIT
+trap 'exit 130' INT TERM
+
+# Valida el mensaje. Si falla, deja el motivo en $ERROR
+validate() {
+  case "$MSG" in
+    Merge*|Revert*) NOTE=" · generado por Git"; return 0 ;;
+  esac
+
+  echo "$MSG" | grep -Eq "^($TYPES)(\([a-z0-9-]+\))?!?:" \
+    || { ERROR="Tipo no válido o falta ':'"; return 1; }
+
+  DESC=${MSG#*:}
+
+  echo "$DESC" | grep -q '[^[:space:]]' \
+    || { ERROR="Falta la descripción después de ':'"; return 1; }
+
+  echo "$DESC" | grep -Eq '^ [^ ]' \
+    || { ERROR="Después de ':' debe haber exactamente un espacio"; return 1; }
+
+  DESC=${DESC# }
+
+  case "$DESC" in
+    [A-Z]*) ERROR="La descripción debe empezar en minúscula"; return 1 ;;
+  esac
+
+  case "$DESC" in
+    *.) ERROR="La descripción no debe terminar en punto"; return 1 ;;
+  esac
+
+  [ ${#MSG} -le 72 ] \
+    || { ERROR="El asunto no debe superar 72 caracteres (tiene ${#MSG})"; return 1; }
+
+  return 0
+}
+
+T0=$(now_ms)
+validate
+RESULT=$?
+
+# Animación mínima para que la línea se comporte como las demás
+sleep "$MIN_SPIN" &
+spin $! "$LABEL"
+wait
+
+ELAPSED=$(( $(now_ms) - T0 ))
+
+if [ "$RESULT" -eq 0 ]; then
+  ok_line "$LABEL" "$(fmt_ms "$ELAPSED")$NOTE"
+  if [ -f "$TIME_FILE" ]; then
+    TOTAL=$(( $(cat "$TIME_FILE") + ELAPSED ))
+    printf '\n%s✔ Todo correcto%s  %s%s%s\n\n' "$GREEN$BOLD" "$RESET" "$DIM" "$(fmt_ms "$TOTAL")" "$RESET" >&2
+    rm -f "$TIME_FILE"
+  fi
+  exit 0
+fi
+
+rm -f "$TIME_FILE"
+fail_line "$LABEL" "$(fmt_ms "$ELAPSED")"
+{
+  printf '\n%s✖ Commit rechazado%s\n\n' "$RED$BOLD" "$RESET"
+  printf '  %sMensaje:%s   %s\n' "$DIM" "$RESET" "$MSG"
+  printf '  %sProblema:%s  %s%s%s\n\n' "$DIM" "$RESET" "$YELLOW" "$ERROR" "$RESET"
+  printf '  %sFormato:%s   %stipo%s(scope opcional): descripción\n' "$DIM" "$RESET" "$CYAN" "$RESET"
+  printf '  %sEjemplos:%s  %sfeat%s: añadir filtro por estado\n' "$DIM" "$RESET" "$CYAN" "$RESET"
+  printf '             %sfix%s(ui): corregir alineación de indicadores\n' "$CYAN" "$RESET"
+  printf '  %sTipos:%s     %s\n\n' "$DIM" "$RESET" "$(echo "$TYPES" | tr '|' ' ')"
+} >&2
+exit 1

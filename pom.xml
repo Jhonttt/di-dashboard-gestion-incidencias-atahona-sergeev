@@ -75,6 +75,26 @@
                     <violationSeverity>error</violationSeverity>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.rudikershaw.gitbuildhook</groupId>
+                <artifactId>git-build-hook-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <gitConfig>
+                        <core.hooksPath>.githooks/</core.hooksPath>
+                        <alias.c>commit -q</alias.c>
+                    </gitConfig>
+                </configuration>
+                <executions>
+                    <execution>
+                        <?m2e ignore?>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
