@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -25,7 +26,11 @@ public class App extends Application {
         Button searchButton = new Button("Buscar");
         searchButton.setDefaultButton(true);
 
-        HBox nav = new HBox(10, new Label("Incidencia: "), searchInput, searchButton);
+        ComboBox<String> sortButton = new ComboBox<>();
+        sortButton.getItems().addAll("Alfabéticamente", "Cronológicamente");
+        sortButton.setValue("Filtrar");
+
+        HBox nav = new HBox(10, new Label("Incidencia: "), searchInput, searchButton, sortButton);
 
         nav.setAlignment(Pos.CENTER_LEFT);
 
