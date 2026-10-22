@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -18,9 +19,13 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         TextField searchInput = new TextField();
         searchInput.setPromptText("Ej.: Error al iniciar sesión en la aplicación");
+
         HBox.setHgrow(searchInput, Priority.ALWAYS);
 
-        HBox nav = new HBox(10, new Label("Incidencia: "), searchInput);
+        Button searchButton = new Button("Buscar");
+        searchButton.setDefaultButton(true);
+
+        HBox nav = new HBox(10, new Label("Incidencia: "), searchInput, searchButton);
 
         nav.setAlignment(Pos.CENTER_LEFT);
 
