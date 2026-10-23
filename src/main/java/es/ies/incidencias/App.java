@@ -1,6 +1,8 @@
 package es.ies.incidencias;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,73 +28,69 @@ public class App extends Application {
 
     public static class Incidencia {
 
-        private String nombre;
-        private String estado;
-        private String prioridad;
-        private String ultimaActualizacion;
-        private String fechaCreacion;
-        private final String opciones = "...";
-        private String contenido = "";
+        private String name;
+        private String state;
+        private String priority;
+        private LocalDateTime lastUpdated;
+        private LocalDate creationDate;
+        private final String options = "...";
+        private String content = "";
 
-        public Incidencia(
-                String nombre,
-                String estado,
-                String prioridad,
-                String ultimaActualizacion,
-                String fechaCreacion) {
-            this.nombre = nombre;
-            this.estado = estado;
-            this.prioridad = prioridad;
-            this.ultimaActualizacion = ultimaActualizacion;
-            this.fechaCreacion = fechaCreacion;
+        public Incidencia(String name, String state, String priority) {
+
+            this.name = name;
+            this.state = state;
+            this.priority = priority;
+            this.lastUpdated = LocalDateTime.now();
+            this.creationDate = LocalDate.now();
         }
 
-        public String getNombre() {
-            return nombre;
+        public String getName() {
+            return name;
         }
 
-        public String getEstado() {
-            return estado;
+        public String getState() {
+            return state;
         }
 
-        public String getPrioridad() {
-            return prioridad;
+        public String getPriority() {
+            return priority;
         }
 
-        public String getUltimaActualizacion() {
-            return ultimaActualizacion;
+        public LocalDateTime getLastUpdated() {
+            return lastUpdated;
         }
 
-        public String getFechaCreacion() {
-            return fechaCreacion;
+        public LocalDate getCreationDate() {
+            return creationDate;
         }
 
-        public String getOpciones() {
-            return opciones;
+        public String getOptions() {
+            return options;
         }
 
-        public String getContenido() {
-            return contenido;
+        public String getContent() {
+            return content;
         }
 
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
+        public void setName(String name) {
+            this.name = name;
         }
 
-        public void setEstado(String estado) {
-            this.estado = estado;
+        public void setState(String state) {
+            this.state = state;
         }
 
-        public void setPrioridad(String prioridad) {
-            this.prioridad = prioridad;
+        public void setPriority(String priority) {
+            this.priority = priority;
         }
 
-        public void setUltimaActualizacion(String ultimaActualizacion) {
-            this.ultimaActualizacion = ultimaActualizacion;
+        public void updateLastUpdated() {
+            this.lastUpdated = LocalDateTime.now();
         }
 
-        public void setContenido(String contenido) {
-            this.contenido = contenido;
+        public void setContent(String content) {
+            this.content = content;
         }
     }
 
@@ -114,79 +112,54 @@ public class App extends Application {
 
         nav.setAlignment(Pos.CENTER_LEFT);
 
-        TableView<Incidencia> tabla = new TableView<>();
+        TableView<Incidencia> table = new TableView<>();
 
-        TableColumn<Incidencia, String> colNombre = new TableColumn<>("Nombre");
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colNombre.setPrefWidth(150);
+        TableColumn<Incidencia, String> colName = new TableColumn<>("Nombre");
+        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colName.setPrefWidth(150);
 
-        TableColumn<Incidencia, String> colEstado = new TableColumn<>("Estado");
-        colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        colEstado.setPrefWidth(100);
+        TableColumn<Incidencia, String> colState = new TableColumn<>("Estado");
+        colState.setCellValueFactory(new PropertyValueFactory<>("state"));
+        colState.setPrefWidth(100);
 
-        TableColumn<Incidencia, String> colPrioridad = new TableColumn<>("Prioridad");
-        colPrioridad.setCellValueFactory(new PropertyValueFactory<>("prioridad"));
-        colPrioridad.setPrefWidth(100);
+        TableColumn<Incidencia, String> colPriority = new TableColumn<>("Prioridad");
+        colPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
+        colPriority.setPrefWidth(100);
 
-        TableColumn<Incidencia, String> colUltimaAct = new TableColumn<>("Última actualización");
-        colUltimaAct.setCellValueFactory(new PropertyValueFactory<>("ultimaActualizacion"));
-        colUltimaAct.setPrefWidth(150);
+        TableColumn<Incidencia, String> colLastUpdated = new TableColumn<>("Última actualización");
+        colLastUpdated.setCellValueFactory(new PropertyValueFactory<>("lastUpdated"));
+        colLastUpdated.setPrefWidth(150);
 
-        TableColumn<Incidencia, String> colFechaCreacion = new TableColumn<>("Fecha de creación");
-        colFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
-        colFechaCreacion.setPrefWidth(120);
+        TableColumn<Incidencia, String> colCreationDate = new TableColumn<>("Fecha de creación");
+        colCreationDate.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+        colCreationDate.setPrefWidth(120);
 
-        TableColumn<Incidencia, String> colOpciones = new TableColumn<>("Opciones");
-        colOpciones.setCellValueFactory(new PropertyValueFactory<>("opciones"));
-        colOpciones.setPrefWidth(120);
+        TableColumn<Incidencia, String> colOptions = new TableColumn<>("Opciones");
+        colOptions.setCellValueFactory(new PropertyValueFactory<>("options"));
+        colOptions.setPrefWidth(120);
 
-        tabla.getColumns()
+        table.getColumns()
                 .addAll(
-                        colNombre,
-                        colEstado,
-                        colPrioridad,
-                        colUltimaAct,
-                        colFechaCreacion,
-                        colOpciones);
+                        colName,
+                        colState,
+                        colPriority,
+                        colLastUpdated,
+                        colCreationDate,
+                        colOptions);
 
-        ObservableList<Incidencia> datos =
+        ObservableList<Incidencia> data =
                 FXCollections.observableArrayList(
-                        new Incidencia(
-                                "Error en pasarela de pago",
-                                "Abierta",
-                                "Crítica",
-                                "21-10-2026",
-                                "21-10-2026"),
-                        new Incidencia(
-                                "Fallo de renderizado en UI",
-                                "En proceso",
-                                "Media",
-                                "20-10-2026",
-                                "18-10-2026"),
-                        new Incidencia(
-                                "Actualizar dependencias Maven",
-                                "Resueltas",
-                                "Baja",
-                                "19-10-2026",
-                                "15-10-2026"),
-                        new Incidencia(
-                                "Fuga de memoria en controlador",
-                                "Abierta",
-                                "Alta",
-                                "21-10-2026",
-                                "20-10-2026"),
-                        new Incidencia(
-                                "Error 404 en imágenes de perfil",
-                                "En proceso",
-                                "Baja",
-                                "21-10-2026",
-                                "21-10-2026"));
-        tabla.setItems(datos);
+                        new Incidencia("Error en pasarela de pago", "Abierta", "Crítica"),
+                        new Incidencia("Fallo de renderizado en UI", "En proceso", "Media"),
+                        new Incidencia("Actualizar dependencias Maven", "Resueltas", "Baja"),
+                        new Incidencia("Fuga de memoria en controlador", "Abierta", "Alta"),
+                        new Incidencia("Error 404 en imágenes de perfil", "En proceso", "Baja"));
+        table.setItems(data);
 
         mainLayout = new BorderPane();
-        mainLayout.setCenter(tabla);
+        mainLayout.setCenter(table);
 
-        VBox root = new VBox(14, nav, tabla);
+        VBox root = new VBox(14, nav, table);
 
         root.setPadding(new Insets(20));
 
