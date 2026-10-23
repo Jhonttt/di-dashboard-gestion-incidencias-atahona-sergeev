@@ -1,20 +1,111 @@
 package es.ies.incidencias;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
+
+    private BorderPane mainLayout;
+
+    public static class Incidencia {
+
+        private String name;
+        private String state;
+        private String priority;
+        private LocalDateTime lastUpdated;
+        private LocalDate creationDate;
+        private final String options = "...";
+        private String content = "";
+
+        public Incidencia(
+                String name,
+                String state,
+                String priority,
+                LocalDateTime lastUpdated,
+                LocalDate creationDate) {
+            this.name = name;
+            this.state = state;
+            this.priority = priority;
+            this.lastUpdated = lastUpdated;
+            this.creationDate = creationDate;
+        }
+
+        public Incidencia(String name, String state, String priority) {
+            this.name = name;
+            this.state = state;
+            this.priority = priority;
+            this.lastUpdated = LocalDateTime.now();
+            this.creationDate = LocalDate.now();
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public String getPriority() {
+            return priority;
+        }
+
+        public LocalDateTime getLastUpdated() {
+            return lastUpdated;
+        }
+
+        public LocalDate getCreationDate() {
+            return creationDate;
+        }
+
+        public String getOptions() {
+            return options;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public void setPriority(String priority) {
+            this.priority = priority;
+        }
+
+        public void updateLastUpdated() {
+            this.lastUpdated = LocalDateTime.now();
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -34,7 +125,89 @@ public class App extends Application {
 
         nav.setAlignment(Pos.CENTER_LEFT);
 
-        VBox root = new VBox(14, nav);
+        TableView<Incidencia> table = new TableView<>();
+
+        TableColumn<Incidencia, String> colName = new TableColumn<>("Nombre");
+        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colName.setPrefWidth(150);
+
+        TableColumn<Incidencia, String> colState = new TableColumn<>("Estado");
+        colState.setCellValueFactory(new PropertyValueFactory<>("state"));
+        colState.setPrefWidth(100);
+
+        TableColumn<Incidencia, String> colPriority = new TableColumn<>("Prioridad");
+        colPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
+        colPriority.setPrefWidth(100);
+
+        TableColumn<Incidencia, String> colLastUpdated = new TableColumn<>("Última actualización");
+        colLastUpdated.setCellValueFactory(new PropertyValueFactory<>("lastUpdated"));
+        colLastUpdated.setPrefWidth(150);
+
+        TableColumn<Incidencia, String> colCreationDate = new TableColumn<>("Fecha de creación");
+        colCreationDate.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+        colCreationDate.setPrefWidth(120);
+
+        TableColumn<Incidencia, String> colOptions = new TableColumn<>("Opciones");
+        colOptions.setCellValueFactory(new PropertyValueFactory<>("options"));
+        colOptions.setPrefWidth(120);
+
+        table.getColumns()
+                .addAll(
+                        colName,
+                        colState,
+                        colPriority,
+                        colLastUpdated,
+                        colCreationDate,
+                        colOptions);
+
+        ObservableList<Incidencia> data =
+                FXCollections.observableArrayList(
+                        new Incidencia(
+                                "Error en pasarela de pago",
+                                "Abierta",
+                                "Crítica",
+                                LocalDateTime.parse(
+                                        "2025-09-23T09:30:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2025-09-01")),
+                        new Incidencia(
+                                "Fallo de renderizado en UI",
+                                "En proceso",
+                                "Media",
+                                LocalDateTime.parse(
+                                        "2025-12-20T10:30:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2025-12-03")),
+                        new Incidencia(
+                                "Actualizar dependencias Maven",
+                                "Resueltas",
+                                "Baja",
+                                LocalDateTime.parse(
+                                        "2026-01-18T11:00:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2026-01-05")),
+                        new Incidencia(
+                                "Fuga de memoria en controlador",
+                                "Abierta",
+                                "Alta",
+                                LocalDateTime.parse(
+                                        "2026-03-15T12:00:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2026-03-07")),
+                        new Incidencia(
+                                "Error 404 en imágenes de perfil",
+                                "En proceso",
+                                "Baja",
+                                LocalDateTime.parse(
+                                        "2026-05-12T13:00:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2026-05-09")));
+        table.setItems(data);
+
+        mainLayout = new BorderPane();
+        mainLayout.setCenter(table);
+
+        VBox root = new VBox(14, nav, table);
 
         root.setPadding(new Insets(20));
 
