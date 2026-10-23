@@ -11,8 +11,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -119,9 +123,37 @@ public class App extends Application {
 
         ComboBox<String> sortButton = new ComboBox<>();
         sortButton.getItems().addAll("Alfabéticamente", "Cronológicamente");
-        sortButton.setValue("Filtrar");
+        sortButton.setValue("Ordenar");
 
-        HBox nav = new HBox(10, new Label("Incidencia: "), searchInput, searchButton, sortButton);
+        MenuButton filterButton = new MenuButton("Filtros");
+
+        MenuItem estados = new MenuItem("Estados:");
+        estados.setDisable(true);
+
+        MenuItem prioridades = new MenuItem("Prioridades:");
+        prioridades.setDisable(true);
+
+        filterButton
+                .getItems()
+                .addAll(
+                        estados,
+                        new CheckMenuItem("Abiertas"),
+                        new CheckMenuItem("En proceso"),
+                        new CheckMenuItem("Resueltas"),
+                        new SeparatorMenuItem(),
+                        prioridades,
+                        new CheckMenuItem("Alta"),
+                        new CheckMenuItem("Media"),
+                        new CheckMenuItem("Baja"));
+
+        HBox nav =
+                new HBox(
+                        10,
+                        new Label("Incidencia: "),
+                        searchInput,
+                        searchButton,
+                        sortButton,
+                        filterButton);
 
         nav.setAlignment(Pos.CENTER_LEFT);
 
