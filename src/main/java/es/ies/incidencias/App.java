@@ -146,6 +146,8 @@ public class App extends Application {
                         new CheckMenuItem("Media"),
                         new CheckMenuItem("Baja"));
 
+        Button createButton = new Button("Crear incidencia");
+
         HBox nav =
                 new HBox(
                         10,
@@ -153,7 +155,8 @@ public class App extends Application {
                         searchInput,
                         searchButton,
                         sortButton,
-                        filterButton);
+                        filterButton,
+                        createButton);
 
         nav.setAlignment(Pos.CENTER_LEFT);
 
