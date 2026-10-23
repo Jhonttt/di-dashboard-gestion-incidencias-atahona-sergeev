@@ -3,6 +3,7 @@ package es.ies.incidencias;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,8 +37,20 @@ public class App extends Application {
         private final String options = "...";
         private String content = "";
 
-        public Incidencia(String name, String state, String priority) {
+        public Incidencia(
+                String name,
+                String state,
+                String priority,
+                LocalDateTime lastUpdated,
+                LocalDate creationDate) {
+            this.name = name;
+            this.state = state;
+            this.priority = priority;
+            this.lastUpdated = lastUpdated;
+            this.creationDate = creationDate;
+        }
 
+        public Incidencia(String name, String state, String priority) {
             this.name = name;
             this.state = state;
             this.priority = priority;
@@ -149,11 +162,46 @@ public class App extends Application {
 
         ObservableList<Incidencia> data =
                 FXCollections.observableArrayList(
-                        new Incidencia("Error en pasarela de pago", "Abierta", "Crítica"),
-                        new Incidencia("Fallo de renderizado en UI", "En proceso", "Media"),
-                        new Incidencia("Actualizar dependencias Maven", "Resueltas", "Baja"),
-                        new Incidencia("Fuga de memoria en controlador", "Abierta", "Alta"),
-                        new Incidencia("Error 404 en imágenes de perfil", "En proceso", "Baja"));
+                        new Incidencia(
+                                "Error en pasarela de pago",
+                                "Abierta",
+                                "Crítica",
+                                LocalDateTime.parse(
+                                        "2025-09-23T09:30:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2025-09-01")),
+                        new Incidencia(
+                                "Fallo de renderizado en UI",
+                                "En proceso",
+                                "Media",
+                                LocalDateTime.parse(
+                                        "2025-12-20T10:30:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2025-12-03")),
+                        new Incidencia(
+                                "Actualizar dependencias Maven",
+                                "Resueltas",
+                                "Baja",
+                                LocalDateTime.parse(
+                                        "2026-01-18T11:00:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2026-01-05")),
+                        new Incidencia(
+                                "Fuga de memoria en controlador",
+                                "Abierta",
+                                "Alta",
+                                LocalDateTime.parse(
+                                        "2026-03-15T12:00:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2026-03-07")),
+                        new Incidencia(
+                                "Error 404 en imágenes de perfil",
+                                "En proceso",
+                                "Baja",
+                                LocalDateTime.parse(
+                                        "2026-05-12T13:00:00",
+                                        DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
+                                LocalDate.parse("2026-05-09")));
         table.setItems(data);
 
         mainLayout = new BorderPane();
