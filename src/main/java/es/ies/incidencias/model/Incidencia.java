@@ -9,7 +9,7 @@ public class Incidencia {
     private String state;
     private String priority;
     private LocalDateTime lastUpdated;
-    private LocalDate creationDate;
+    private final LocalDate creationDate;
     private final String options = "...";
     private String content = "";
 

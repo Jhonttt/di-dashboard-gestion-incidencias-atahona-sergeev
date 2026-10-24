@@ -1,4 +1,5 @@
 module es.ies.incidencias {
+    requires transitive javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
 
