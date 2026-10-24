@@ -115,7 +115,6 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         TextField searchInput = new TextField();
         searchInput.setPromptText("Ej.: Error al iniciar sesión en la aplicación");
-
         HBox.setHgrow(searchInput, Priority.ALWAYS);
 
         Button searchButton = new Button("Buscar");
@@ -242,7 +241,17 @@ public class App extends Application {
         mainLayout = new BorderPane();
         mainLayout.setCenter(table);
 
-        VBox root = new VBox(14, nav, table);
+        HBox footer =
+                new HBox(
+                        20,
+                        new Label("Total de incidencias: 33"),
+                        new Label("Abiertas: 33"),
+                        new Label("En proceso: 33"),
+                        new Label("Resueltas: 33"));
+
+        nav.setAlignment(Pos.CENTER_LEFT);
+
+        VBox root = new VBox(14, nav, table, footer);
 
         root.setPadding(new Insets(20));
 
