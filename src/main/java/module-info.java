@@ -7,5 +7,3 @@ module es.ies.incidencias {
 
     exports es.ies.incidencias;
 }
-
-# Automated fix for issue #22: Cambiar el layout raíz a BorderPane
