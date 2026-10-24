@@ -5,7 +5,6 @@ import es.ies.incidencias.model.Incidencia;
 import es.ies.incidencias.view.Footer;
 import es.ies.incidencias.view.IncidenciasTable;
 import es.ies.incidencias.view.TopBar;
-import java.io.IOException;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -16,7 +15,7 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         ObservableList<Incidencia> tableData = SampleData.incidencias();
 
         TopBar nav = new TopBar();
