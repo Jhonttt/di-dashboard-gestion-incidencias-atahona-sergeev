@@ -1,5 +1,6 @@
 package es.ies.incidencias;
 
+import es.ies.incidencias.model.Incidencia;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +13,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -24,106 +24,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
-
-    private BorderPane mainLayout;
-
-    public static class Incidencia {
-
-        private String name;
-        private String state;
-        private String priority;
-        private LocalDateTime lastUpdated;
-        private LocalDate creationDate;
-        private final String options = "...";
-        private String content = "";
-
-        public Incidencia(
-                String name,
-                String state,
-                String priority,
-                LocalDateTime lastUpdated,
-                LocalDate creationDate) {
-            this.name = name;
-            this.state = state;
-            this.priority = priority;
-            this.lastUpdated = lastUpdated;
-            this.creationDate = creationDate;
-        }
-
-        public Incidencia(String name, String state, String priority) {
-            this.name = name;
-            this.state = state;
-            this.priority = priority;
-            this.lastUpdated = LocalDateTime.now();
-            this.creationDate = LocalDate.now();
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getState() {
-            return state;
-        }
-
-        public String getPriority() {
-            return priority;
-        }
-
-        public LocalDateTime getLastUpdated() {
-            return lastUpdated;
-        }
-
-        public LocalDate getCreationDate() {
-            return creationDate;
-        }
-
-        public String getOptions() {
-            return options;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setState(String state) {
-            this.state = state;
-        }
-
-        public void setPriority(String priority) {
-            this.priority = priority;
-        }
-
-        public void updateLastUpdated() {
-            this.lastUpdated = LocalDateTime.now();
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
 
     @Override
     public void start(Stage stage) throws IOException {
         TextField searchInput = new TextField();
         searchInput.setPromptText("Ej.: Error al iniciar sesión en la aplicación");
-
         HBox.setHgrow(searchInput, Priority.ALWAYS);
 
         Button searchButton = new Button("Buscar");
         searchButton.setDefaultButton(true);
-
-        ComboBox<String> sortButton = new ComboBox<>();
-        sortButton.getItems().addAll("Alfabéticamente", "Cronológicamente");
-        sortButton.setValue("Ordenar");
 
         MenuButton filterButton = new MenuButton("Filtros");
 
@@ -154,7 +66,6 @@ public class App extends Application {
                         new Label("Incidencia: "),
                         searchInput,
                         searchButton,
-                        sortButton,
                         filterButton,
                         createButton);
 
@@ -239,11 +150,22 @@ public class App extends Application {
                                 LocalDate.parse("2026-05-09")));
         table.setItems(data);
 
-        mainLayout = new BorderPane();
-        mainLayout.setCenter(table);
+        HBox footer =
+                new HBox(
+                        20,
+                        new Label("Total de incidencias: 33"),
+                        new Label("Abiertas: 33"),
+                        new Label("En proceso: 33"),
+                        new Label("Resueltas: 33"));
 
-        VBox root = new VBox(14, nav, table);
+        footer.setAlignment(Pos.CENTER_LEFT);
 
+        BorderPane root = new BorderPane();
+        root.setTop(nav);
+        root.setCenter(table);
+        root.setBottom(footer);
+
+        BorderPane.setMargin(table, new Insets(14, 0, 14, 0));
         root.setPadding(new Insets(20));
 
         Scene scene = new Scene(root, 820, 500);

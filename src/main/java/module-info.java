@@ -4,6 +4,8 @@ module es.ies.incidencias {
 
     opens es.ies.incidencias to
             javafx.fxml;
+    opens es.ies.incidencias.model to
+            javafx.base;
 
     exports es.ies.incidencias;
 }
