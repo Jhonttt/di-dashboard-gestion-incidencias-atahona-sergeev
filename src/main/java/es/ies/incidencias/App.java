@@ -2,17 +2,15 @@ package es.ies.incidencias;
 
 import es.ies.incidencias.data.SampleData;
 import es.ies.incidencias.model.Incidencia;
+import es.ies.incidencias.view.Footer;
 import es.ies.incidencias.view.IncidenciasTable;
 import es.ies.incidencias.view.TopBar;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -20,18 +18,10 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         ObservableList<Incidencia> tableData = SampleData.incidencias();
+
         TopBar nav = new TopBar();
         IncidenciasTable table = new IncidenciasTable(tableData);
-
-        HBox footer =
-                new HBox(
-                        20,
-                        new Label("Total de incidencias: 33"),
-                        new Label("Abiertas: 33"),
-                        new Label("En proceso: 33"),
-                        new Label("Resueltas: 33"));
-
-        footer.setAlignment(Pos.CENTER_LEFT);
+        Footer footer = new Footer();
 
         BorderPane root = new BorderPane();
         root.setTop(nav);
