@@ -1,6 +1,8 @@
 package es.ies.incidencias.data;
 
+import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
+import es.ies.incidencias.model.PrioridadIncidencia;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,40 +16,40 @@ public final class SampleData {
         return FXCollections.observableArrayList(
                 new Incidencia(
                         "Error en pasarela de pago",
-                        "Abierta",
-                        "Crítica",
+                        EstadoIncidencia.ABIERTA,
+                        PrioridadIncidencia.CRITICA,
                         LocalDateTime.parse(
                                 "2025-09-23T09:30:00",
                                 DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
                         LocalDate.parse("2025-09-01")),
                 new Incidencia(
                         "Fallo de renderizado en UI",
-                        "En proceso",
-                        "Media",
+                        EstadoIncidencia.EN_PROCESO,
+                        PrioridadIncidencia.MEDIA,
                         LocalDateTime.parse(
                                 "2025-12-20T10:30:00",
                                 DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
                         LocalDate.parse("2025-12-03")),
                 new Incidencia(
                         "Actualizar dependencias Maven",
-                        "Resueltas",
-                        "Baja",
+                        EstadoIncidencia.RESUELTA,
+                        PrioridadIncidencia.BAJA,
                         LocalDateTime.parse(
                                 "2026-01-18T11:00:00",
                                 DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
                         LocalDate.parse("2026-01-05")),
                 new Incidencia(
                         "Fuga de memoria en controlador",
-                        "Abierta",
-                        "Alta",
+                        EstadoIncidencia.ABIERTA,
+                        PrioridadIncidencia.ALTA,
                         LocalDateTime.parse(
                                 "2026-03-15T12:00:00",
                                 DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),
                         LocalDate.parse("2026-03-07")),
                 new Incidencia(
                         "Error 404 en imágenes de perfil",
-                        "En proceso",
-                        "Baja",
+                        EstadoIncidencia.EN_PROCESO,
+                        PrioridadIncidencia.BAJA,
                         LocalDateTime.parse(
                                 "2026-05-12T13:00:00",
                                 DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),

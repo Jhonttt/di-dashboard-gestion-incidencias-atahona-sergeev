@@ -1,5 +1,7 @@
 package es.ies.incidencias.view;
 
+import es.ies.incidencias.model.EstadoIncidencia;
+import es.ies.incidencias.model.PrioridadIncidencia;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -30,18 +32,17 @@ public class TopBar extends HBox {
         MenuItem prioridades = new MenuItem("Prioridades:");
         prioridades.setDisable(true);
 
-        filterButton
-                .getItems()
-                .addAll(
-                        estados,
-                        new CheckMenuItem("Abiertas"),
-                        new CheckMenuItem("En proceso"),
-                        new CheckMenuItem("Resueltas"),
-                        new SeparatorMenuItem(),
-                        prioridades,
-                        new CheckMenuItem("Alta"),
-                        new CheckMenuItem("Media"),
-                        new CheckMenuItem("Baja"));
+        filterButton.getItems().add(estados);
+
+        for (EstadoIncidencia estado : EstadoIncidencia.values()) {
+            filterButton.getItems().add(new CheckMenuItem(estado.toString()));
+        }
+
+        filterButton.getItems().addAll(new SeparatorMenuItem(), prioridades);
+
+        for (PrioridadIncidencia prioridad : PrioridadIncidencia.values()) {
+            filterButton.getItems().add(new CheckMenuItem(prioridad.toString()));
+        }
 
         Button createButton = new Button("Crear incidencia");
 
