@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 public class Incidencia {
 
     private String name;
-    private String state;
-    private String priority;
+    private EstadoIncidencia state;
+    private PrioridadIncidencia priority;
     private LocalDateTime lastUpdated;
     private final LocalDate creationDate;
     private final String options = "...";
@@ -15,8 +15,8 @@ public class Incidencia {
 
     public Incidencia(
             String name,
-            String state,
-            String priority,
+            EstadoIncidencia state,
+            PrioridadIncidencia priority,
             LocalDateTime lastUpdated,
             LocalDate creationDate) {
         this.name = name;
@@ -26,7 +26,7 @@ public class Incidencia {
         this.creationDate = creationDate;
     }
 
-    public Incidencia(String name, String state, String priority) {
+    public Incidencia(String name, EstadoIncidencia state, PrioridadIncidencia priority) {
         this.name = name;
         this.state = state;
         this.priority = priority;
@@ -38,11 +38,11 @@ public class Incidencia {
         return name;
     }
 
-    public String getState() {
+    public EstadoIncidencia getState() {
         return state;
     }
 
-    public String getPriority() {
+    public PrioridadIncidencia getPriority() {
         return priority;
     }
 
@@ -66,11 +66,11 @@ public class Incidencia {
         this.name = name;
     }
 
-    public void setState(String state) {
+    public void setState(EstadoIncidencia state) {
         this.state = state;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(PrioridadIncidencia priority) {
         this.priority = priority;
     }
 
