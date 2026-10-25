@@ -23,12 +23,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
-
-    private BorderPane mainLayout;
 
     public static class Incidencia {
 
@@ -232,9 +229,6 @@ public class App extends Application {
                                 LocalDate.parse("2026-05-09")));
         table.setItems(data);
 
-        mainLayout = new BorderPane();
-        mainLayout.setCenter(table);
-
         HBox footer =
                 new HBox(
                         20,
@@ -243,10 +237,14 @@ public class App extends Application {
                         new Label("En proceso: 33"),
                         new Label("Resueltas: 33"));
 
-        nav.setAlignment(Pos.CENTER_LEFT);
+        footer.setAlignment(Pos.CENTER_LEFT);
 
-        VBox root = new VBox(14, nav, table, footer);
+        BorderPane root = new BorderPane();
+        root.setTop(nav);
+        root.setCenter(table);
+        root.setBottom(footer);
 
+        BorderPane.setMargin(table, new Insets(14, 0, 14, 0));
         root.setPadding(new Insets(20));
 
         Scene scene = new Scene(root, 820, 500);
