@@ -7,6 +7,7 @@ import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
@@ -31,6 +32,22 @@ public class MainView extends BorderPane {
                 .textProperty()
                 .addListener((observable, oldValue, newValue) -> debounce.playFromStart());
 
+        topBar.getStatesList()
+                .forEach(
+                        item ->
+                                item.selectedProperty()
+                                        .addListener(
+                                                (observable, oldValue, newValue) ->
+                                                        searchIncidencias()));
+
+        topBar.getPrioritiesList()
+                .forEach(
+                        item ->
+                                item.selectedProperty()
+                                        .addListener(
+                                                (observable, oldValue, newValue) ->
+                                                        searchIncidencias()));
+
         setTop(topBar);
         setCenter(table);
         setBottom(new Footer());
@@ -41,17 +58,26 @@ public class MainView extends BorderPane {
 
     private void searchIncidencias() {
         String text = topBar.getSearchInput().getText().trim().toLowerCase();
+        List<String> states = selecteds(topBar.getStatesList());
+        List<String> priorities = selecteds(topBar.getPrioritiesList());
 
-        List<Incidencia> resultados = new ArrayList<>();
+        List<Incidencia> results = new ArrayList<>();
+
         for (Incidencia incidencia : incidencias) {
             String name = incidencia.getName();
-            if (name == null) continue;
-            if (name.toLowerCase().contains(text)) {
-                resultados.add(incidencia);
-            }
+            if (name == null || !name.toLowerCase().contains(text)) continue;
+            if (!states.isEmpty() && !states.contains(incidencia.getState().toString())) continue;
+            if (!priorities.isEmpty() && !priorities.contains(incidencia.getPriority().toString()))
+                continue;
+
+            results.add(incidencia);
         }
 
-        table.getItems().setAll(resultados);
+        table.getItems().setAll(results);
         table.sort();
+    }
+
+    private List<String> selecteds(List<CheckMenuItem> filter) {
+        return filter.stream().filter(i -> i.isSelected()).map(i -> i.getText()).toList();
     }
 }
