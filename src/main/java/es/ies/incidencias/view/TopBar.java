@@ -14,15 +14,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 public class TopBar extends HBox {
+    private final TextField searchInput = new TextField();
+
     public TopBar() {
         super(10);
 
-        TextField searchInput = new TextField();
         searchInput.setPromptText("Ej.: Error al iniciar sesión en la aplicación");
         HBox.setHgrow(searchInput, Priority.ALWAYS);
-
-        Button searchButton = new Button("Buscar");
-        searchButton.setDefaultButton(true);
 
         MenuButton filterButton = new MenuButton("Filtros");
 
@@ -46,13 +44,11 @@ public class TopBar extends HBox {
 
         Button createButton = new Button("Crear incidencia");
 
-        getChildren()
-                .addAll(
-                        new Label("Incidencia: "),
-                        searchInput,
-                        searchButton,
-                        filterButton,
-                        createButton);
+        getChildren().addAll(new Label("Incidencia: "), searchInput, filterButton, createButton);
         setAlignment(Pos.CENTER_LEFT);
+    }
+
+    public TextField getSearchInput() {
+        return searchInput;
     }
 }
