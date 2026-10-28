@@ -16,6 +16,7 @@ public class MainView extends BorderPane {
     private final ObservableList<Incidencia> incidencias;
     private final IncidenciasTable table;
     private final TopBar topBar;
+    private final Footer footer = new Footer();
     private final PauseTransition debounce = new PauseTransition(Duration.millis(300));
 
     public MainView(ObservableList<Incidencia> incidencias) {
@@ -26,11 +27,19 @@ public class MainView extends BorderPane {
         table = new IncidenciasTable(FXCollections.observableArrayList(incidencias));
         table.setPlaceholder(new Label("No hay incidencias que coincidan"));
 
+        table.setOnDelete(
+                incidencia -> {
+                    incidencias.remove(incidencia);
+                    searchIncidencias();
+                });
+        table.setOnStateChange(this::searchIncidencias);
+
         debounce.setOnFinished(e -> searchIncidencias());
 
         topBar.getSearchInput()
                 .textProperty()
                 .addListener((observable, oldValue, newValue) -> debounce.playFromStart());
+
         topBar.getStatesList()
                 .forEach(
                         item ->
@@ -46,31 +55,17 @@ public class MainView extends BorderPane {
                                         .addListener(
                                                 (observable, oldValue, newValue) ->
                                                         searchIncidencias()));
+
         topBar.setOnCreate(
                 incidencia -> {
                     incidencias.add(incidencia);
                     searchIncidencias();
                 });
 
-        topBar.getStatesList()
-                .forEach(
-                        item ->
-                                item.selectedProperty()
-                                        .addListener(
-                                                (observable, oldValue, newValue) ->
-                                                        searchIncidencias()));
-
-        topBar.getPrioritiesList()
-                .forEach(
-                        item ->
-                                item.selectedProperty()
-                                        .addListener(
-                                                (observable, oldValue, newValue) ->
-                                                        searchIncidencias()));
-
         setTop(topBar);
         setCenter(table);
-        setBottom(new Footer());
+        setBottom(footer);
+        footer.update(incidencias);
 
         BorderPane.setMargin(table, new Insets(14, 0, 14, 0));
         setPadding(new Insets(20));
@@ -95,6 +90,7 @@ public class MainView extends BorderPane {
 
         table.getItems().setAll(results);
         table.sort();
+        footer.update(incidencias);
     }
 
     private List<String> selecteds(List<CheckMenuItem> filter) {
