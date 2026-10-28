@@ -2,8 +2,9 @@ package es.ies.incidencias.view;
 
 import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
-import java.time.LocalDateTime;
 import es.ies.incidencias.model.PrioridadIncidencia;
+import java.time.LocalDateTime;
+import java.util.function.Consumer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,6 +23,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class IncidenciasTable extends TableView<Incidencia> {
+    private Consumer<Incidencia> onDelete = i -> {};
+    private Runnable onStateChange = () -> {};
+
     public IncidenciasTable(ObservableList<Incidencia> data) {
         this.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         this.setEditable(true);
@@ -46,7 +50,7 @@ public class IncidenciasTable extends TableView<Incidencia> {
                 event -> {
                     Incidencia incidencia = event.getRowValue();
                     incidencia.setState(event.getNewValue());
-                    refreshTableItems();
+                    onStateChange.run();
                 });
 
         TableColumn<Incidencia, PrioridadIncidencia> colPriority = new TableColumn<>("Prioridad");
@@ -111,7 +115,7 @@ public class IncidenciasTable extends TableView<Incidencia> {
                         Button btnConfirmar = new Button("Confirmar");
                         btnConfirmar.setOnAction(
                                 e -> {
-                                    getItems().remove(incidencia);
+                                    onDelete.accept(incidencia);
                                     ventanaEmergente.close();
                                 });
 
@@ -172,6 +176,14 @@ public class IncidenciasTable extends TableView<Incidencia> {
                         colCreationDate,
                         colOptions);
         setItems(data);
+    }
+
+    public void setOnDelete(Consumer<Incidencia> handler) {
+        this.onDelete = handler;
+    }
+
+    public void setOnStateChange(Runnable handler) {
+        this.onStateChange = handler;
     }
 
     private void refreshTableItems() {
