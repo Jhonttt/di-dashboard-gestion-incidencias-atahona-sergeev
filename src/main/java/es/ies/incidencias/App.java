@@ -17,6 +17,8 @@ public class App extends Application {
         Scene scene = new Scene(new MainView(incidencias), 820, 500);
         stage.setTitle("Gestor de incidencias");
         stage.setScene(scene);
+        stage.setMinHeight(400);
+        stage.setMinWidth(656);
         stage.show();
     }
 

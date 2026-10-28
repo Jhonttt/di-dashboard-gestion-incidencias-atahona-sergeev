@@ -1,7 +1,9 @@
 package es.ies.incidencias.view;
 
+import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
 import java.time.LocalDateTime;
+import es.ies.incidencias.model.PrioridadIncidencia;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -35,12 +37,11 @@ public class IncidenciasTable extends TableView<Incidencia> {
                     incidencia.setName(event.getNewValue());
                 });
 
-        TableColumn<Incidencia, String> colState = new TableColumn<>("Estado");
+        TableColumn<Incidencia, EstadoIncidencia> colState = new TableColumn<>("Estado");
         colState.setCellValueFactory(new PropertyValueFactory<>("state"));
         colState.setPrefWidth(100);
 
-        colState.setCellFactory(
-                ComboBoxTableCell.forTableColumn("Abierta", "En proceso", "Resueltas"));
+        colState.setCellFactory(ComboBoxTableCell.forTableColumn(EstadoIncidencia.values()));
         colState.setOnEditCommit(
                 event -> {
                     Incidencia incidencia = event.getRowValue();
@@ -48,11 +49,11 @@ public class IncidenciasTable extends TableView<Incidencia> {
                     refreshTableItems();
                 });
 
-        TableColumn<Incidencia, String> colPriority = new TableColumn<>("Prioridad");
+        TableColumn<Incidencia, PrioridadIncidencia> colPriority = new TableColumn<>("Prioridad");
         colPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
         colPriority.setPrefWidth(100);
 
-        colPriority.setCellFactory(ComboBoxTableCell.forTableColumn("Alta", "Media", "Baja"));
+        colPriority.setCellFactory(ComboBoxTableCell.forTableColumn(PrioridadIncidencia.values()));
         colPriority.setOnEditCommit(
                 event -> {
                     Incidencia incidencia = event.getRowValue();
