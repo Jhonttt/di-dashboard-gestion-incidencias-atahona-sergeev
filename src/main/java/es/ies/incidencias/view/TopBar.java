@@ -1,5 +1,6 @@
 package es.ies.incidencias.view;
 
+import atlantafx.base.theme.Styles;
 import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
 import es.ies.incidencias.model.PrioridadIncidencia;
@@ -42,6 +43,7 @@ public class TopBar extends HBox {
         clearInput.setVisible(false);
         clearInput.setManaged(false);
         clearInput.setOnAction(e -> searchInput.clear());
+        clearInput.getStyleClass().addAll(Styles.BUTTON_ICON, Styles.FLAT);
         searchInput.textProperty().addListener((o, a, b) -> refreshClearInput());
 
         MenuButton filterButton = new MenuButton("Filtros");
@@ -67,11 +69,13 @@ public class TopBar extends HBox {
             prioritiesList.add(item);
             filterButton.getItems().add(item);
         }
+        filterButton.setStyle("-fx-background-color: #fcff50;");
 
         clearFilters.setGraphic(icon(FILTER_OFF_ICON, 14));
         clearFilters.setTooltip(new Tooltip("Borrar búsqueda"));
         clearFilters.setVisible(false);
         clearFilters.setManaged(false);
+        clearFilters.getStyleClass().addAll(Styles.BUTTON_ICON, Styles.FLAT);
         clearFilters.setOnAction(
                 e -> {
                     statesList.forEach(i -> i.setSelected(false));
@@ -83,6 +87,7 @@ public class TopBar extends HBox {
                 i -> i.selectedProperty().addListener((o, a, b) -> refreshClearFilters()));
 
         Button createButton = new Button("Crear incidencia");
+        createButton.getStyleClass().add(Styles.SUCCESS);
         createButton.setOnAction(e -> createIncidencia());
 
         getChildren()
@@ -120,7 +125,7 @@ public class TopBar extends HBox {
                 "-fx-shape: \""
                         + path
                         + "\";"
-                        + "-fx-background-color: #444;"
+                        + "-fx-background-color: red;"
                         + "-fx-min-width: "
                         + size
                         + "; -fx-min-height: "

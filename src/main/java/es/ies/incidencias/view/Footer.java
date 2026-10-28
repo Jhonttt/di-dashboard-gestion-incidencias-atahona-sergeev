@@ -1,5 +1,6 @@
 package es.ies.incidencias.view;
 
+import atlantafx.base.theme.Styles;
 import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
 import java.util.List;
@@ -15,6 +16,11 @@ public class Footer extends HBox {
 
     public Footer() {
         super(20);
+
+        for (Label l : List.of(total, abiertas, enProceso, resueltas)) {
+            l.getStyleClass().add(Styles.TEXT_CAPTION);
+        }
+
         getChildren().addAll(total, abiertas, enProceso, resueltas);
         setAlignment(Pos.CENTER_LEFT);
         update(List.of());

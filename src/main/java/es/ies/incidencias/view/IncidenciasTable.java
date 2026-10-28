@@ -1,5 +1,6 @@
 package es.ies.incidencias.view;
 
+import atlantafx.base.theme.Styles;
 import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
 import es.ies.incidencias.model.PrioridadIncidencia;
@@ -99,6 +100,7 @@ public class IncidenciasTable extends TableView<Incidencia> {
                         Stage ventanaEmergente = new Stage();
                         ventanaEmergente.setTitle("Confirmar eliminación");
                         Label lblConfirmacion = new Label("¿Confirmar eliminación?");
+                        lblConfirmacion.getStyleClass().add(Styles.TITLE_4);
                         ventanaEmergente.initModality(javafx.stage.Modality.APPLICATION_MODAL);
                         ventanaEmergente.initOwner(getScene().getWindow());
 
@@ -113,6 +115,7 @@ public class IncidenciasTable extends TableView<Incidencia> {
                                 });
 
                         Button btnConfirmar = new Button("Confirmar");
+                        btnConfirmar.getStyleClass().add(Styles.DANGER);
                         btnConfirmar.setOnAction(
                                 e -> {
                                     onDelete.accept(incidencia);
@@ -151,6 +154,7 @@ public class IncidenciasTable extends TableView<Incidencia> {
                         txtDescripcion.setText(incidencia.getContent());
 
                         Button btnCerrar = new Button("Cerrar");
+
                         btnCerrar.setOnAction(
                                 e -> {
                                     ventanaEmergente.close();

@@ -1,5 +1,6 @@
 package es.ies.incidencias.view;
 
+import atlantafx.base.theme.Styles;
 import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
 import es.ies.incidencias.model.PrioridadIncidencia;
@@ -33,6 +34,9 @@ public class IncidenciaDialog extends Dialog<Incidencia> {
                 new ComboBox<>(FXCollections.observableArrayList(EstadoIncidencia.values()));
         state.getSelectionModel().selectFirst();
 
+        priority.setMaxWidth(Double.MAX_VALUE);
+        state.setMaxWidth(Double.MAX_VALUE);
+
         VBox box =
                 new VBox(
                         10,
@@ -47,7 +51,9 @@ public class IncidenciaDialog extends Dialog<Incidencia> {
 
         ButtonType createButton = new ButtonType("Crear", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(createButton, ButtonType.CANCEL);
-        getDialogPane().setPrefSize(300, 360);
+        getDialogPane().setPrefSize(300, 260);
+
+        getDialogPane().lookupButton(ButtonType.CANCEL).getStyleClass().add(Styles.DANGER);
 
         getDialogPane()
                 .lookupButton(createButton)
