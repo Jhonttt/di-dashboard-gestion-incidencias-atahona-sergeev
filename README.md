@@ -29,7 +29,7 @@ La primera ejecución descarga las dependencias y configura automáticamente los
 │   └── lib/ui.sh           Utilidades de presentación compartidas
 ├── config/checkstyle/      Reglas de análisis estático
 ├── src/main/java/          Código fuente
-├── src/main/resources/     Recursos (CSS, FXML)
+├── docs/                   Documentación sobre la aplicación
 └── pom.xml                 Configuración de Maven
 ```
 
