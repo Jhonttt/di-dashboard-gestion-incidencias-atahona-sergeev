@@ -3,6 +3,7 @@ package es.ies.incidencias.view;
 import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
 import es.ies.incidencias.model.PrioridadIncidencia;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,7 +15,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -36,7 +36,9 @@ public class IncidenciasTable extends TableView<Incidencia> {
         colPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
         colPriority.setPrefWidth(100);
 
-        colPriority.setCellFactory(ComboBoxTableCell.forTableColumn("Alta", "Media", "Baja"));
+        colPriority.setCellFactory(
+                ComboBoxTableCell.forTableColumn(
+                        FXCollections.observableArrayList(PrioridadIncidencia.values())));
         colPriority.setOnEditCommit(
                 event -> {
                     Incidencia incidencia = event.getRowValue();
