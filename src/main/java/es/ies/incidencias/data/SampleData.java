@@ -15,7 +15,7 @@ public final class SampleData {
                 new Incidencia(
                         "Error en pasarela de pago",
                         "Abierta",
-                        "Crítica",
+                        "Alta",
                         LocalDateTime.parse(
                                 "2025-09-23T09:30:00",
                                 DateTimeFormatter.ofPattern("yyyy-M-d'T'H:mm:ss")),

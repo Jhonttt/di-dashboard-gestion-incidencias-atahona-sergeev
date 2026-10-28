@@ -44,6 +44,7 @@ public class IncidenciasTable extends TableView<Incidencia> {
                 event -> {
                     Incidencia incidencia = event.getRowValue();
                     incidencia.setState(event.getNewValue());
+                    refresh();
                 });
 
         TableColumn<Incidencia, String> colPriority = new TableColumn<>("Prioridad");
