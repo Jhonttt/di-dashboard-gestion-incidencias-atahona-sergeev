@@ -31,6 +31,26 @@ public class MainView extends BorderPane {
         topBar.getSearchInput()
                 .textProperty()
                 .addListener((observable, oldValue, newValue) -> debounce.playFromStart());
+        topBar.getStatesList()
+                .forEach(
+                        item ->
+                                item.selectedProperty()
+                                        .addListener(
+                                                (observable, oldValue, newValue) ->
+                                                        searchIncidencias()));
+
+        topBar.getPrioritiesList()
+                .forEach(
+                        item ->
+                                item.selectedProperty()
+                                        .addListener(
+                                                (observable, oldValue, newValue) ->
+                                                        searchIncidencias()));
+        topBar.setOnCreate(
+                incidencia -> {
+                    incidencias.add(incidencia);
+                    searchIncidencias();
+                });
 
         topBar.getStatesList()
                 .forEach(
