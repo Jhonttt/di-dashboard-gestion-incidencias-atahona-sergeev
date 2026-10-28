@@ -15,6 +15,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -28,17 +29,29 @@ public class IncidenciasTable extends TableView<Incidencia> {
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colName.setPrefWidth(150);
 
+        colName.setCellFactory(TextFieldTableCell.forTableColumn());
+        colName.setOnEditCommit(
+                event -> {
+                    Incidencia incidencia = event.getRowValue();
+                    incidencia.setName(event.getNewValue());
+                });
+
         TableColumn<Incidencia, EstadoIncidencia> colState = new TableColumn<>("Estado");
         colState.setCellValueFactory(new PropertyValueFactory<>("state"));
         colState.setPrefWidth(100);
+
+        colState.setCellFactory(ComboBoxTableCell.forTableColumn(EstadoIncidencia.values()));
+        colState.setOnEditCommit(
+                event -> {
+                    Incidencia incidencia = event.getRowValue();
+                    incidencia.setState(event.getNewValue());
+                });
 
         TableColumn<Incidencia, PrioridadIncidencia> colPriority = new TableColumn<>("Prioridad");
         colPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
         colPriority.setPrefWidth(100);
 
-        colPriority.setCellFactory(
-                ComboBoxTableCell.forTableColumn(
-                        FXCollections.observableArrayList(PrioridadIncidencia.values())));
+        colPriority.setCellFactory(ComboBoxTableCell.forTableColumn(PrioridadIncidencia.values()));
         colPriority.setOnEditCommit(
                 event -> {
                     Incidencia incidencia = event.getRowValue();
