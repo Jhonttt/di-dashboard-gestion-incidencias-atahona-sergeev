@@ -2,6 +2,7 @@ module es.ies.incidencias {
     requires transitive javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
+    requires atlantafx.base;
 
     opens es.ies.incidencias to
             javafx.fxml;

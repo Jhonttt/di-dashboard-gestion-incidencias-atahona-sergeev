@@ -1,5 +1,6 @@
 package es.ies.incidencias;
 
+import atlantafx.base.theme.PrimerLight;
 import es.ies.incidencias.data.SampleData;
 import es.ies.incidencias.model.Incidencia;
 import es.ies.incidencias.view.MainView;
@@ -12,6 +13,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         ObservableList<Incidencia> incidencias = SampleData.incidencias();
 
         Scene scene = new Scene(new MainView(incidencias), 820, 500);
