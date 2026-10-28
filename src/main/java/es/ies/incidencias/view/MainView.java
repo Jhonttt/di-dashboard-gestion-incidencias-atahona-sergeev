@@ -52,6 +52,22 @@ public class MainView extends BorderPane {
                     searchIncidencias();
                 });
 
+        topBar.getStatesList()
+                .forEach(
+                        item ->
+                                item.selectedProperty()
+                                        .addListener(
+                                                (observable, oldValue, newValue) ->
+                                                        searchIncidencias()));
+
+        topBar.getPrioritiesList()
+                .forEach(
+                        item ->
+                                item.selectedProperty()
+                                        .addListener(
+                                                (observable, oldValue, newValue) ->
+                                                        searchIncidencias()));
+
         setTop(topBar);
         setCenter(table);
         setBottom(new Footer());

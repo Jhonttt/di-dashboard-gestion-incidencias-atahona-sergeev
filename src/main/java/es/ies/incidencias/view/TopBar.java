@@ -46,13 +46,13 @@ public class TopBar extends HBox {
 
         MenuButton filterButton = new MenuButton("Filtros");
 
-        MenuItem estados = new MenuItem("Estados:");
-        estados.setDisable(true);
+        MenuItem states = new MenuItem("Estados:");
+        states.setDisable(true);
 
-        MenuItem prioridades = new MenuItem("Prioridades:");
-        prioridades.setDisable(true);
+        MenuItem priorities = new MenuItem("Prioridades:");
+        priorities.setDisable(true);
 
-        filterButton.getItems().add(estados);
+        filterButton.getItems().add(states);
 
         for (EstadoIncidencia state : EstadoIncidencia.values()) {
             CheckMenuItem item = new CheckMenuItem(state.toString());
@@ -60,7 +60,7 @@ public class TopBar extends HBox {
             filterButton.getItems().add(item);
         }
 
-        filterButton.getItems().addAll(new SeparatorMenuItem(), prioridades);
+        filterButton.getItems().addAll(new SeparatorMenuItem(), priorities);
 
         for (PrioridadIncidencia priority : PrioridadIncidencia.values()) {
             CheckMenuItem item = new CheckMenuItem(priority.toString());
