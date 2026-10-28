@@ -48,3 +48,33 @@
 • Qué modificamos: nada pues todavía no esta hecho con scene así que se creo directamente como dialog
 • Cómo validamos la respuesta: probamos que efectivamente no hacía falta hacer toda la lógica y funcionaba todo correctamente 
 • Qué hemos aprendido: alternativa a scene que lleva implicito varías cosas y por defecto no se puede escalar (esto se puede desactivar también en scene)
+### Lev
+• Fecha: 19/10/2026
+• Problema que queríamos resolver: como poder editar columnas de incidencias en la tabla desde la interfaz
+• Herramienta utilizada: Google Gemini
+• Prompt o consulta realizada: como hacer editables los elementos en un TableColumn en JavaFX
+• Resumen de la respuesta: aplicando tabla.setEditable(true)
+• Qué parte utilizamos: la parte correspondiente donde crear la tabla
+• Qué modificamos: solo añadimos el metodo a la tabla ya inicializada
+• Cómo validamos la respuesta: probando la interfaz
+• Qué hemos aprendido: a como poder cambiar elementos de la interfaz desde la misma
+---
+• Fecha:
+• Problema que queríamos resolver:
+• Herramienta utilizada:
+• Prompt o consulta realizada: 
+• Resumen de la respuesta: 
+• Qué parte utilizamos: 
+• Qué modificamos: 
+• Cómo validamos la respuesta: 
+• Qué hemos aprendido: 
+---
+• Fecha:
+• Problema que queríamos resolver:
+• Herramienta utilizada:
+• Prompt o consulta realizada: 
+• Resumen de la respuesta: 
+• Qué parte utilizamos: 
+• Qué modificamos: 
+• Cómo validamos la respuesta: 
+• Qué hemos aprendido: 
