@@ -67,4 +67,4 @@ git c -m "feat: añadir filtro por estado"
 ## Equipo
 
 - Juan Atahona Mojonero
-- Nombre Apellido
+- Lev Sergeev
