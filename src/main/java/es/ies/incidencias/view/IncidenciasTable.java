@@ -1,6 +1,9 @@
 package es.ies.incidencias.view;
 
+import es.ies.incidencias.model.EstadoIncidencia;
 import es.ies.incidencias.model.Incidencia;
+import java.time.LocalDateTime;
+import es.ies.incidencias.model.PrioridadIncidencia;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -34,23 +37,23 @@ public class IncidenciasTable extends TableView<Incidencia> {
                     incidencia.setName(event.getNewValue());
                 });
 
-        TableColumn<Incidencia, String> colState = new TableColumn<>("Estado");
+        TableColumn<Incidencia, EstadoIncidencia> colState = new TableColumn<>("Estado");
         colState.setCellValueFactory(new PropertyValueFactory<>("state"));
         colState.setPrefWidth(100);
 
-        colState.setCellFactory(
-                ComboBoxTableCell.forTableColumn("Abierta", "En proceso", "Resueltas"));
+        colState.setCellFactory(ComboBoxTableCell.forTableColumn(EstadoIncidencia.values()));
         colState.setOnEditCommit(
                 event -> {
                     Incidencia incidencia = event.getRowValue();
                     incidencia.setState(event.getNewValue());
+                    refreshTableItems();
                 });
 
-        TableColumn<Incidencia, String> colPriority = new TableColumn<>("Prioridad");
+        TableColumn<Incidencia, PrioridadIncidencia> colPriority = new TableColumn<>("Prioridad");
         colPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
         colPriority.setPrefWidth(100);
 
-        colPriority.setCellFactory(ComboBoxTableCell.forTableColumn("Alta", "Media", "Baja"));
+        colPriority.setCellFactory(ComboBoxTableCell.forTableColumn(PrioridadIncidencia.values()));
         colPriority.setOnEditCommit(
                 event -> {
                     Incidencia incidencia = event.getRowValue();
@@ -58,7 +61,17 @@ public class IncidenciasTable extends TableView<Incidencia> {
                 });
 
         TableColumn<Incidencia, String> colLastUpdated = new TableColumn<>("Última actualización");
-        colLastUpdated.setCellValueFactory(new PropertyValueFactory<>("lastUpdated"));
+        colLastUpdated.setCellValueFactory(
+                cellData -> {
+                    LocalDateTime fecha = cellData.getValue().getLastUpdated();
+                    if (fecha != null) {
+                        java.time.format.DateTimeFormatter formatter =
+                                java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                        return new javafx.beans.property.SimpleStringProperty(
+                                fecha.format(formatter));
+                    }
+                    return new javafx.beans.property.SimpleStringProperty("");
+                });
         colLastUpdated.setPrefWidth(150);
 
         TableColumn<Incidencia, String> colCreationDate = new TableColumn<>("Fecha de creación");
@@ -138,6 +151,8 @@ public class IncidenciasTable extends TableView<Incidencia> {
                                 e -> {
                                     ventanaEmergente.close();
                                     incidencia.setContent(txtDescripcion.getText());
+                                    incidencia.updateLastUpdated();
+                                    refreshTableItems();
                                 });
                         layoutEmergente
                                 .getChildren()
@@ -157,5 +172,9 @@ public class IncidenciasTable extends TableView<Incidencia> {
                         colCreationDate,
                         colOptions);
         setItems(data);
+    }
+
+    private void refreshTableItems() {
+        this.refresh();
     }
 }
